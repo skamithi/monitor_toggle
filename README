@@ -1,0 +1,40 @@
+Toggle Script for my Nvidia based Laptop. 
+Tested on a Lenovo T61P
+
+Author: Stanley Kamithi
+URL: kenyangeekboy.blogspot.com
+Licence: GPL
+
+Requirements:
+-------------
+
+*Ruby (of cause)
+*xosd
+*Laptop with Nvidia graphics card
+
+Install
+-------
+
+To install run "sudo rake install". 
+Default directory is /usr/local/monitor_toggle.
+To change this install dir, run "sudo rake install install_dir=<new_dir>"
+
+Uninstall
+---------
+
+Run "sudo rake uninstall"
+
+
+Version 0.1
+
+* Toggling occurs only when Fn+F7 is activated
+
+* When 2 monitors are present
+  * Flip from LCD screen to External Screen
+  * Flip from External Screen to Clone Mode
+  * Flip From Clone Mode back to LCD Screen
+
+* When 3 monitors are present
+  * Flip from LCD Screen to 2 external screens (prefers CRT-0 as primary screen)  * Flip from External screen mode to LCD screen
+
+

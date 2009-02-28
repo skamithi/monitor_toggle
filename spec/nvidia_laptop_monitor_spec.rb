@@ -208,7 +208,6 @@ describe NvidiaMonitor do
                     NvidiaMonitor.display_mask.to_s(16).should == '1'
                     NvidiaMonitor.create_metamode_str.should ==
                             'CRT-0: nvidia-auto-select +0+0, NULL'
-                    debugger
                     NvControlDpy.activate_metamode(NvidiaMonitor.create_metamode_str).should == '67'
                 end
 
@@ -245,7 +244,7 @@ describe NvidiaMonitor do
                     NvidiaMonitor.display_mask.to_s(16).should == '10001'
                     NvidiaMonitor.create_metamode_str.should ==
                             'DFP-0: nvidia-auto-select +0+0, CRT-0: nvidia-auto-select +0+0'
-                    NvControlDpy.activate_metamode(NvidiaMonitor.create_metamode_str).should == '62'
+                    NvControlDpy.activate_metamode(NvidiaMonitor.create_metamode_str).should == '64'
                 end
 
                 it "should return OSD String saying its in Clone Mode" do
@@ -281,7 +280,7 @@ describe NvidiaMonitor do
                     NvidiaMonitor.display_mask.to_s(16).should == '10000'
                     NvidiaMonitor.create_metamode_str.should ==
                             'DFP-0: nvidia-auto-select +0+0, NULL'
-                    NvControlDpy.activate_metamode(NvidiaMonitor.create_metamode_str).should == '68'
+                    NvControlDpy.activate_metamode(NvidiaMonitor.create_metamode_str).should == '50'
                 end
 
                 it "should return OSD String saying its in LCD Mode" do
@@ -350,7 +349,7 @@ describe NvidiaMonitor do
                         and_return(metamodes({:num_of_monitors => 3, :mode => @next_mode}))
                 end
 
-                it "should return a external display mask  and the monitor count is 3 "+
+                it "should return a lcd display mask  and the monitor count is 3 "+
                    "after probing and activating" do
                     NvidiaMonitor.send(:probe_and_get_display_mask)
                     NvidiaMonitor.active_monitors = NvidiaMonitor.get_active_monitors
@@ -363,7 +362,7 @@ describe NvidiaMonitor do
                     NvidiaMonitor.display_mask.to_s(16).should == '10000'
                     NvidiaMonitor.create_metamode_str.should ==
                             'DFP-0: nvidia-auto-select +0+0, NULL'
-                    NvControlDpy.activate_metamode(NvidiaMonitor.create_metamode_str).should == '61'
+                    NvControlDpy.activate_metamode(NvidiaMonitor.create_metamode_str).should == '50'
                 end
 
                 it "should return OSD String saying its in External Mode" do

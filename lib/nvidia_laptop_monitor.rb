@@ -55,9 +55,10 @@ module NvControlDpy
             end
             if count == 2
                 id = line.match(/id=(\d+)/)[1]
+                return id
             end
         end
-        id
+        nil
     end
 
     def self.set_display_mask(mask)

@@ -11,15 +11,6 @@ class NvidiaMonitor < XorgMonitor
     super
   end
 
-  # Return the new display mask after activation
-  def activate(mask)
-    new_display_mask = mask
-    unless(self.mask & mask) == (self.mask | mask)
-      new_display_mask = self.mask | mask
-      NvControlDpy::set_display_mask(format_display_mask(new_display_mask))
-    end
-    return new_display_mask
-  end
 
 # set nvidia metamode
     # params: orientation -> :right or :absolute, :clone

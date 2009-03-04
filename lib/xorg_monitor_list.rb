@@ -5,10 +5,15 @@ class XorgMonitorList
   def initialize(options = {})
     @probed_monitors = []
     @active_monitors   = []
+    @mask = 0
   end
 
   def run_xrandr
-    `xrandr -s #{self.xrandr_res} -r #{xrandr_id}`
-  end
+    if self.xrandr_res && self.xrandr_id
+        `xrandr -s #{self.xrandr_res.join('x')} -r #{self.xrandr_id}`
+    else
+        self.osd_str = "Failed to execute xrandr"
+    end
+end
 
 end

@@ -52,7 +52,7 @@ EOF
 <<EOF
 MetaModes:
   id=50, switchable=yes, source=xconfig :: DFP-0: nvidia-auto-select @1680x1050 +0+0, CRT-0: NULL, DFP-1: NULL
-  id=51, switchable=yes, source=xconfig :: DFP-0: nvidia-auto-select @1680x1050 +0+0, CRT-0: NULL
+  id=51, switchable=yes, source=xconfig :: DFP-0: nvidia-auto-select @1680x1050 +0+0, CRT-0: NULL, DFP-1: NULL
 
 EOF
 

@@ -80,7 +80,8 @@ module NvControlDpy
 
   # Executes different options of nv-control-dpy
   def self.exec(options = {}, send_to_dev_null = nil)
-    dev_null = (send_to_dev_null)?  '> /dev/null' : ''
+    #dev_null = (send_to_dev_null)?  '> /dev/null' : ''
+    dev_null = ''
         `#{BIN_FILE} --#{options[:keyword]} '#{options[:arg].to_s}' #{dev_null}`
   end
 

@@ -27,11 +27,13 @@ class NvidiaMonitorList < XorgMonitorList
 
     get_active_monitor_list
     get_next_monitor_mode
+    enable_monitors
     set_monitor_resolution
     activate_monitors
     set_metamodes
 
-    self.xrandr_id = NvControlDpy::activate_metamode(self.create_metamode_str)
+    self.xrandr_id = NvControlDpy::activate_metamode(create_metamode_str)
+    self.osd_str = "#{self.mode.to_s.capitalize} Mode: #{self.probed_monitors.size} Monitors"
     run_xrandr
   end
 
@@ -45,9 +47,15 @@ class NvidiaMonitorList < XorgMonitorList
 
   private
 
+  def enable_monitors
+    self.mask = 0
+    self.probed_monitors.each do |nm|
+        self.mask = self.mask | nm.mask
+    end
+    NvControlDpy::set_display_mask(format_display_mask(self.mask))
+  end
 
   def activate_monitors
-    self.mask = 0
     external_monitor = 0
     res = [0,0]
     self.active_monitors = []
@@ -55,29 +63,19 @@ class NvidiaMonitorList < XorgMonitorList
       case self.mode
       when :lcd
         if nm.laptop_lcd?
-          self.mask = nm.activate(self.mask)
+          self.mask = self.mask | nm.mask
           res = [nm.xres.to_i, nm.yres.to_i]
           self.active_monitors << nm
         end
       when :clone
-          if nm.laptop_lcd?
-            self.mask = nm.activate(self.mask)
-            self.active_monitors << nm
-          else
-            self.mask = nm.activate(self.mask)
-            self.active_monitors << nm
-          end
+          self.mask = self.mask | nm.mask
+          self.active_monitors << nm
           res = [ [res[0].to_i, nm.xres.to_i].max, [res[1].to_i,nm.yres.to_i].max]
       when :external
         unless nm.laptop_lcd?
           external_monitor += 1
-          if external_monitor == 1
-            self.mask = nm.activate(self.mask)
-            self.active_monitors << nm
-          else
-            self.mask = nm.activate(self.mask)
-            self.active_monitors << nm
-          end
+          self.mask = self.mask | nm.mask
+          self.active_monitors << nm
           res = [res[0].to_i + nm.xres.to_i, [res[1].to_i, nm.yres.to_i].max]
         end
       end
@@ -135,7 +133,7 @@ class NvidiaMonitorList < XorgMonitorList
     self.active_monitors.each do |nm|
       pos = "+0+0"
       pos_in_array = 0
-      if self.mode == :clone && count == 1
+      if self.mode == :external && count == 1
         pos = "+#{self.active_monitors[0].xres}+0" if nm
       end
       self.metamodes[count] = { :type => nm.connection_type, :pos => pos }

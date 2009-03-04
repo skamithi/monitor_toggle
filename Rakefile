@@ -1,3 +1,10 @@
+require 'spec/rake/spectask'
+
+Spec::Rake::SpecTask.new(:spec) do |t|
+    t.spec_opts = ['-O', "\"#{File.dirname(__FILE__)}/spec/spec.opts\""]
+    t.spec_files = FileList['spec/**/*/*_spec.rb']
+end
+
 task :uninstall do
     err_msg =  running_as_root
     if (err_msg.empty?)

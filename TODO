@@ -1,4 +1,6 @@
 * Choose a Primary screen
+* add some basic app locking. App will not run if another instance of it
+is active.
 * Create a gnome applet that toggles the script
 * create a debian package (since I run Ubuntu)
 * I have a T43P as well. Setup script to also work with ATI cards

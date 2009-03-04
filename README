@@ -25,6 +25,11 @@ Uninstall
 Run "sudo rake uninstall"
 
 
+Version 0.6
+
+* fix a major bug where toggling wasn't working right on my laptop. probing
+for modelines before monitors where enabled. it caused X to crash.
+
 Version 0.5
 
 * Refactor code

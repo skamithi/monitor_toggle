@@ -1,0 +1,5 @@
+require 'ruby-debug'
+require File.dirname(__FILE__) + '/../../lib/xorg_monitor'
+require File.dirname(__FILE__) + '/../../lib/xorg_monitor_list'
+#require File.dirname(__FILE__) + '/../../lib/nvidia/nvidia_monitor'
+#require File.dirname(__FILE__) + '/../../lib/nvidia/nvidia_monitor_list'

@@ -25,6 +25,10 @@ Uninstall
 Run "sudo rake uninstall"
 
 
+Version 0.5
+
+* Refactor code
+
 Version 0.1
 
 * Toggling occurs only when Fn+F7 is activated

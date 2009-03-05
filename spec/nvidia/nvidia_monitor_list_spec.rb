@@ -428,6 +428,7 @@ describe NvidiaMonitorList do
             @monitor_list.change_monitor_mode
             @monitor_list.active_monitors.size.should == value[:active_mon_count]
             @monitor_list.mode.should == value[:next_mode]
+            @monitor_list.send(:create_metamode_str).should == value[:metamode_str]
             @monitor_list.mask.should == value[:display_mask].to_i(16)
             @monitor_list.xrandr_res.join('x').should == value[:xrandr_res]
             @monitor_list.xrandr_id.should == value[:xrandr_id]

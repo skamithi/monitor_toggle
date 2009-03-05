@@ -50,10 +50,13 @@ module NvControlDpy
     NvControlDpy::exec(:keyword => 'print-metamodes').each do |line|
       line = line.gsub(/@\d+x\d+/,'').gsub(/\s+/,'').gsub('+','')
       count = 0
-      metamode.split(',').each do |mm|
+      line2 = (line.split('source=')[1])? line.split('source=')[1] : line
+      line_size = line2.split(',').size
+      metamode_array = metamode.split(',')
+      metamode_array.each do |mm|
         mm = '' if mm =~ /NULL/
         mm = mm.gsub('+','').gsub(/\s+/,'')
-        if line =~ /#{mm}/
+        if line2 =~ /#{mm}/ && (line_size == metamode_array.size)
           count += 1
         end
       end

@@ -46,26 +46,17 @@ module NvControlDpy
 
   # Get the ID used by xrandr to set to select the correct metamode
   def self.get_metamode_id(metamode)
-    id = nil
-    NvControlDpy::exec(:keyword => 'print-metamodes').each do |line|
-      line = line.gsub(/@\d+x\d+/,'').gsub(/\s+/,'').gsub('+','')
-      count = 0
-      line2 = (line.split('source=')[1])? line.split('source=')[1] : line
-      line_size = line2.split(',').size
-      metamode_array = metamode.split(',')
-      metamode_array.each do |mm|
-        mm = '' if mm =~ /NULL/
-        mm = mm.gsub('+','').gsub(/\s+/,'')
-        if line2 =~ /#{mm}/ && (line_size == metamode_array.size)
-          count += 1
-        end
-      end
-      if count == 2
-        id = line.match(/id=(\d+)/)[1]
-        return id
-      end
+    xrandr_id = nil
+    xrandr_id = NvControlDpy::exec(:keyword => 'print-metamodes').find do |line|
+         line_types = Array.new
+         connection_types = metamode.split(',').collect { |x| x.split(':')[0].strip if x !~ /NULL/ }.compact
+          line_id = line.match(/id=(\d+)/)
+          if line_id
+            line_types = line.split("::")[1].strip.split(',').map { |x| x.split(':')[0].strip if x =~ /nvidia/ }.compact
+            count = (connection_types & line_types.to_a).count
+            return line_id[1] if count == connection_types.count
+         end
     end
-    return nil
   end
 
   # Set the display mask
@@ -89,3 +80,4 @@ module NvControlDpy
   end
 
 end
+

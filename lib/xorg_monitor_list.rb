@@ -14,6 +14,7 @@ class XorgMonitorList
     else
         self.osd_str = "Failed to execute xrandr"
     end
-end
+  end
 
 end
+

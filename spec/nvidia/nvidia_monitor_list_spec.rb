@@ -131,17 +131,40 @@ describe NvidiaMonitorList do
     before(:each) do
       NvControlDpy.stub!(:exec).
                 with(:keyword => 'print-modelines').and_return(modelines(3))
-      @monitor_list.probed_monitors = [@laptop_lcd, @second_monitor, @third_monitor]
-      @monitor_list.send(:set_monitor_resolution)
     end
-    it "should return '1600x1200' for the laptop lcd" do
-      @laptop_lcd.resolution.should == '1680x1050'
+    describe "and each monitor is different" do
+      before(:each)do
+        @monitor_list.probed_monitors = [@laptop_lcd, @second_monitor, @third_monitor]
+        @monitor_list.send(:set_monitor_resolution)
+      end
+      it "should return '1600x1200' for the laptop lcd" do
+        @laptop_lcd.resolution.should == '1680x1050'
+      end
+      it "should return '1280x1050' for the 2nd monitor" do
+        @second_monitor.resolution.should == '1280x1050'
+      end
+      it "should return '1900x1088' for the 3rd monitor" do
+        @third_monitor.resolution.should == '1920x1088'
+      end
     end
-    it "should return '1280x1050' for the 2nd monitor" do
-      @second_monitor.resolution.should == '1280x1050'
-    end
-    it "should return '1900x1088' for the 3rd monitor" do
-      @third_monitor.resolution.should == '1920x1088'
+
+    describe "and the 2 external monitors are the same" do
+      before(:each) do
+        @second_monitor = NvidiaMonitor.new(:name => 'NEC LCD203WXM',
+                                                                    :connection_type => 'CRT-0',
+                                                                    :mask => '0x1'.to_i(16))
+        @monitor_list.probed_monitors = [@laptop_lcd, @second_monitor, @third_monitor]
+        @monitor_list.send(:set_monitor_resolution)
+      end
+       it "should return '1600x1200' for the laptop lcd" do
+        @laptop_lcd.resolution.should == '1680x1050'
+      end
+      it "should return '1920x1088' for the 2nd monitor" do
+        @second_monitor.resolution.should == '1920x1088'
+      end
+      it "should return' '1920x1088' for the 3rd monitor" do
+        @third_monitor.resolution.should == '1920x1088'
+      end
     end
   end
 
@@ -243,6 +266,7 @@ describe NvidiaMonitorList do
           @monitor_list.xrandr_res.should == [1680, 1050]
         end
       end
+
     end
 
   end
@@ -432,7 +456,6 @@ describe NvidiaMonitorList do
             @monitor_list.mask.should == value[:display_mask].to_i(16)
             @monitor_list.xrandr_res.join('x').should == value[:xrandr_res]
             @monitor_list.xrandr_id.should == value[:xrandr_id]
-
             @monitor_list.osd_str.should == "#{value[:next_mode].to_s.capitalize} Mode: #{value[:mon_count]} Monitors"
           end
         end
@@ -441,3 +464,4 @@ describe NvidiaMonitorList do
 
   end
 end
+

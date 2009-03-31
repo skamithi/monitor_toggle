@@ -84,14 +84,6 @@ class NvidiaMonitorList < XorgMonitorList
     self.xrandr_res = res
   end
 
-  def set_monitor_resolution
-    res = NvControlDpy::get_max_modelines
-    self.probed_monitors.each do |nm|
-      name = nm.connect_type.gsub('-','_').downcase.to_sym
-      nm.change_preferred_modeline(res[name])
-    end
-  end
-
   def get_next_monitor_mode
     dfp_0 = self.find_by_connection_type('DFP-0')
     num_of_monitors = self.probed_monitors.size
@@ -110,17 +102,6 @@ class NvidiaMonitorList < XorgMonitorList
         elsif !dfp_0.connected?(self.active_monitors) &&
           second_monitor.connected?(self.active_monitors)
         self.mode = :clone
-      end
-    end
-  end
-
-  def get_active_monitor_list
-    NvControlDpy::exec(:keyword => 'print-current-metamode').each do |line|
-      if line =~ /current metamode/
-        monitors = line.split(/::\s+/)[1].split(',')
-        monitors.each do |m|
-          self.active_monitors << m.match(/(\w+-\w+):/)[1] unless m =~ /NULL/
-        end
       end
     end
   end
@@ -144,7 +125,12 @@ class NvidiaMonitorList < XorgMonitorList
   def set_monitor_resolution
     res = NvControlDpy::get_max_modelines(self)
     self.probed_monitors.each do |nm|
-      nm.change_preferred_modeline(res[nm.connection_type.gsub('-','_').downcase.to_sym])
+      name = nm.connection_type.gsub('-','_').downcase.to_sym
+      if res[name]
+        nm.change_preferred_modeline(res[name])
+      else
+        nm.change_preferred_modeline(self.find_by_name(nm.name).resolution)
+      end
     end
   end
 
@@ -193,3 +179,4 @@ class NvidiaMonitorList < XorgMonitorList
   end
 
 end
+

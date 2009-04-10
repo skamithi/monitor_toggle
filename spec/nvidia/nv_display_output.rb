@@ -143,10 +143,11 @@ EOF
     # options[:second_monitor] => metamode for 2nd monitor
     # option value can be 'NULL'
     def metamodes(options = {})
-        metamode = @@metamodes
+        metamode = @@metamodes.clone
         num_of_monitors = options[:num_of_monitors]
         mode = options[:mode]
         if (num_of_monitors == 2)
+          debugger
           metamode << "  id=50, switchable=yes, source=xconfig :: DFP-0: nvidia-auto-select @1680x1050 +0+0, CRT-0: NULL\n"
 
           metamode << "id=67,  switchable=no, source=nv-control :: CRT-0: nvidia-auto-select @1280x1050 +0+0, NULL\n"
@@ -201,3 +202,4 @@ class Numeric
     end
   end
 end
+

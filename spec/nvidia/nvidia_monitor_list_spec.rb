@@ -370,10 +370,19 @@ describe NvidiaMonitorList do
         # for active monitor  add stub for NvControlDpy print-current-metamode
         NvControlDpy.stub!(:exec).with(:keyword =>'print-current-metamode').
                         and_return(current_metamode(1, current_mode))
+        NvControlDpy.should_receive(:set_display_mask).with('0x00010000')
+        NvControlDpy.should_receive(:exec).with(:keyword => 'print-modelines').
+                    and_return(modelines(1))
+         NvControlDpy.should_receive(:exec).
+            with({:keyword => 'add-metamode', :arg => 'DFP-0: nvidia-auto-select +0+0, NULL'}, true)
+          NvControlDpy.should_receive(:exec).
+                  with(:keyword => 'print-metamodes').
+                 and_return(metamodes({:num_of_monitors => 1, :mode => :lcd }))
+
       end
       it "should do nothing and turn an OSD string stating its in LCD mode" do
           @monitor_list.change_monitor_mode
-          @monitor_list.xrandr_res.should == nil
+          @monitor_list.xrandr_res.should == [1680, 1050]
           @monitor_list.osd_str.should == "LCD Mode: 1 Monitor"
       end
     end
@@ -456,7 +465,8 @@ describe NvidiaMonitorList do
             @monitor_list.mask.should == value[:display_mask].to_i(16)
             @monitor_list.xrandr_res.join('x').should == value[:xrandr_res]
             @monitor_list.xrandr_id.should == value[:xrandr_id]
-            @monitor_list.osd_str.should == "#{value[:next_mode].to_s.capitalize} Mode: #{value[:mon_count]} Monitors"
+            mode = (value[:next_mode] == :lcd)? 'LCD' : value[:next_mode].to_s.capitalize
+            @monitor_list.osd_str.should == "#{mode} Mode: #{value[:mon_count]} Monitors"
           end
         end
       end

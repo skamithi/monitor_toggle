@@ -19,11 +19,11 @@ class NvidiaMonitorList < XorgMonitorList
     # Don't bother moving on if the probed monitor size == 1
     # Need to account for condition where monitor is unplugged
     # before switching modes. (if possible)
-    if (self.probed_monitors.size == 1)
-      self.mode = :lcd
-      self.osd_str = "LCD Mode: 1 Monitor"
-      return
-    end
+#    if (self.probed_monitors.size == 1)
+#      self.mode = :lcd
+#      self.osd_str = "LCD Mode: 1 Monitor"
+#      return
+#    end
 
     get_active_monitor_list
     get_next_monitor_mode
@@ -33,8 +33,16 @@ class NvidiaMonitorList < XorgMonitorList
     set_metamodes
 
     self.xrandr_id = NvControlDpy::activate_metamode(create_metamode_str)
-    self.osd_str = "#{self.mode.to_s.capitalize} Mode: #{self.probed_monitors.size} Monitors"
+    self.osd_str = generate_osd_str
+    "#{self.mode.to_s.capitalize} Mode: #{self.probed_monitors.size} Monitors"
     run_xrandr
+  end
+
+  def generate_osd_str
+    str = ''
+    str = (self.probed_monitors.size == 1)? 'Monitor' : 'Monitors'
+    mode = (self.mode == :lcd) ? 'LCD' : self.mode.to_s.capitalize
+    str = "#{mode} Mode: #{self.probed_monitors.size} #{str}"
   end
 
   def find_by_name(name)

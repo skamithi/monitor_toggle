@@ -14,7 +14,7 @@ task :uninstall do
         install_dir = ''
         if File.exists?(acpi_script)
             File.readlines(acpi_script).each do |line|
-                if line =~ /(.*)\/bin\/monitor_toggle.rb/
+                if line =~ /(.*)\/bin\/monitor_toggle.sh/
                     install_dir = $1.clone.strip
                     break
                 end
@@ -24,7 +24,7 @@ task :uninstall do
         end
         acpi_event_script = '/etc/acpi/events/ibm-videobtn'
         if File.exists?(acpi_event_script)
-            ChangeOnFile(acpi_event_script, /action=.*/, "action=true")
+	    WriteToIbmVideoScript(acpi_event_script)
             puts_with_arrow("Restoring #{acpi_event_script} back to the default config")
         end
         if File.directory?(install_dir)
@@ -84,7 +84,7 @@ for x in /tmp/.X11-unix/*; do
     getXuser;
     if [ x"$XAUTHORITY" != x"" ]; then
         export DISPLAY=":$displaynum"
-        #{install_dir}bin/monitor_toggle.rb
+        #{install_dir}bin/monitor_toggle.sh
     fi
  done
 
@@ -100,13 +100,19 @@ EOF
         FileUtils.chmod 0755, acpi_script
         puts_with_arrow("Modify ibm-videobtn script in acpi directory")
         acpi_event_script = '/etc/acpi/events/ibm-videobtn'
-        ChangeOnFile(acpi_event_script, /action=.*/, "action=#{acpi_script}")
+	WriteToIbmVideoScript(acpi_event_script)
     end
     InstallNvControlDpy()
     RestartAcpid()
   else
     puts err_msg
   end
+end
+
+def WriteToIbmVideoScript(file)
+  str = "event=ibm/hotkey HKEY 00000080 00001007\n"
+  str << "action=/etc/acpi/toggle_monitor.sh" 
+  File.open(file, 'w') { |f| f.write(str) }
 end
 
 def ChangeOnFile(file, regex_to_find, text_to_put_in_place)
@@ -165,8 +171,8 @@ def check_dependencies
     err_msg += "** xosd package is not installed. Please install it \n"
   end
 
-  unless File.exists?('/etc/acpi/events/ibm-videobtn')
-    err_msg +="** cannot find the ibm-videobtn event script. " +
+  unless File.exists?('/etc/acpi/events/')
+    err_msg +="** cannot find the /etc/apci/events event directory. " +
                     "Either Acpid is not installed or the script does not exist \n"
   end
 

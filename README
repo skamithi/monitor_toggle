@@ -8,7 +8,7 @@ Licence: GPL
 Requirements:
 -------------
 
-*Ruby (of cause)
+*Ruby (of cause), specifically the rake package.
 *xosd
 *Laptop with Nvidia graphics card
 

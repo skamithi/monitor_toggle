@@ -141,8 +141,8 @@ end
 
 def InstallNvControlDpy
     puts_with_arrow("Installing nv-control-dpy")
-    nvidia_settings_dir = 'nvidia-settings-177.78'
-    `tar xvfj #{nvidia_settings_dir}_source.tar.bz2`
+    nvidia_settings_dir = 'nvidia-settings-260.19.06'
+    `tar xvfj #{nvidia_settings_dir}.tar.bz2`
     Dir.chdir(nvidia_settings_dir + '/samples')
     `make`
     FileUtils.mkdir_p '/usr/local/bin'

@@ -140,13 +140,18 @@ def running_as_root
 end
 
 def InstallNvControlDpy
+    current_version = '260.19.06'
     puts_with_arrow("Installing nv-control-dpy")
-    nvidia_settings_dir = 'nvidia-settings-260.19.06'
-    `tar xvfj #{nvidia_settings_dir}.tar.bz2`
-    Dir.chdir(nvidia_settings_dir + '/samples')
-    `make`
+#    nvidia_settings_dir = 'nvidia-settings-260.19.06'
+#    `tar xvfj #{nvidia_settings_dir}.tar.bz2`
+#    Dir.chdir(nvidia_settings_dir + '/samples')
+#    `make`
     FileUtils.mkdir_p '/usr/local/bin'
-    FileUtils.cp 'nv-control-dpy' , '/usr/local/bin'
+    Dir.chdir('bin')
+    if RUBY_PLATFORM == 'x86_64-linux'
+      current_exec = ['nv-control-dpy','64bit', current_version].join('-')
+      FileUtils.cp current_exec , '/usr/local/bin/nv-control-dpy'
+    end
     FileUtils.chmod 0755, '/usr/local/bin/nv-control-dpy'
     puts_with_arrow("Successfully installed nv-control-dpy")
 end

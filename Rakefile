@@ -150,8 +150,10 @@ def InstallNvControlDpy
     Dir.chdir('bin')
     if RUBY_PLATFORM == 'x86_64-linux'
       current_exec = ['nv-control-dpy','64bit', current_version].join('-')
-      FileUtils.cp current_exec , '/usr/local/bin/nv-control-dpy'
+    else
+      current_exec = ['nv-control-dpy', '32bit', current_version].join('-')
     end
+    FileUtils.cp current_exec, '/usr/local/bin/nv-control-dpy'
     FileUtils.chmod 0755, '/usr/local/bin/nv-control-dpy'
     puts_with_arrow("Successfully installed nv-control-dpy")
 end
